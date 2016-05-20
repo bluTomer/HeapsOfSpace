@@ -1,0 +1,6 @@
+[submodule "Assets/Submodules/VSCode"]
+	path = Assets/Submodules/VSCode
+	url = https://github.com/dotBunny/VSCode
+[submodule "Assets/Submodules/PigiToolkit"]
+	path = Assets/Submodules/PigiToolkit
+	url = https://github.com/bluTomer/PigiToolkit
