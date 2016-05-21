@@ -13,6 +13,8 @@ public class Asteroid : BaseWarpable, IPoolable
 
     [SerializeField]
     private Image _healthBar;
+    [SerializeField]
+    private AsteroidDeathEffect _deathEffect;
 
     private Rigidbody2D _rigidBody;
     private Renderer _renderer;
@@ -30,8 +32,18 @@ public class Asteroid : BaseWarpable, IPoolable
         _healthBarColor = _healthBar.color;
     }
 
+    protected override void OnStart()
+    {
+        MasterPooler.InitPool<AsteroidDeathEffect>(_deathEffect);
+    }
+
     protected override void Die()
     {
+        var deathEffect = MasterPooler.Get<AsteroidDeathEffect>(transform.position, transform.rotation);
+        deathEffect.transform.localScale = transform.localScale;
+        deathEffect.OnEffectEnd += EndDeathEffect;
+        deathEffect.Play();
+
         if (OnDeath != null)
         {
             OnDeath(this);
@@ -42,6 +54,12 @@ public class Asteroid : BaseWarpable, IPoolable
     {
         StopAllCoroutines();
         StartCoroutine(FlashRed());
+    }
+
+    private void EndDeathEffect(AsteroidDeathEffect effect)
+    {
+        effect.OnEffectEnd -= EndDeathEffect;
+        MasterPooler.Return<AsteroidDeathEffect>(effect);
     }
 
     private IEnumerator FlashRed()

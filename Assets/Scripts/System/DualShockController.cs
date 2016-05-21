@@ -24,7 +24,11 @@ public class DualShockController : BaseBehaviour
     public const string DS4_TRIG = "DS4-Triangle";
     public const string DS4_SHARE = "DS4-Share";
     public const string DS4_OPTN = "DS4-Options";
+    public const string DS4_L1 = "DS4-L1";
+    public const string DS4_L2 = "DS4-L2";
     public const string DS4_L3 = "DS4-L3";
+    public const string DS4_R1 = "DS4-R1";
+    public const string DS4_R2 = "DS4-R2";
     public const string DS4_R3 = "DS4-R3";
     public const string DS4_PS = "DS4-PS";
     public const string DS4_PAD = "DS4-Pad";
@@ -35,18 +39,33 @@ public class DualShockController : BaseBehaviour
     {
         ProcessMoveDirection();
         ProcessLookDirection();
+
+        if (Pressed(DS4_R2))
+        {
+            _playerShip.FireBeam();
+        }
+        else if (Pressed(DS4_R1))
+        {
+            _playerShip.FireMissiles();
+        }
     }
 
     private void ProcessMoveDirection()
     {
         var direction = new Vector2(Input.GetAxis(DS4_Lx), Input.GetAxis(DS4_Ly));
-        _playerShip.Move(direction);
+        if (direction.sqrMagnitude > 0)
+        {
+            _playerShip.Move(direction);
+        }
     }
 
     private void ProcessLookDirection()
     {
         var direction = new Vector2(Input.GetAxis(DS4_Rx), Input.GetAxis(DS4_Ry));
-        _playerShip.Look(direction);
+        if (direction.sqrMagnitude > 0)
+        {
+            _playerShip.Look(direction);
+        }
     }
 
     private bool Pressed(string button)

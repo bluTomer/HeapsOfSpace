@@ -20,12 +20,10 @@ public class BaseGun : PigiBehaviour
 
     public void Fire()
     {
-        if (isFiring == false)
+        if (!isFiring)
         {
             // Started firing
             isFiring = true;
-            //nextShotTime = Time.time + firePrewarm;
-
             FireStarted();
         }
 
