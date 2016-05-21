@@ -26,4 +26,9 @@ public static class ExtensionMethods
         }
         tr.Rotate(Vector3.forward * angleDelta * speed);
     }
+
+    public static Vector2 ToVec2(this Vector3 vec)
+    {
+        return new Vector2(vec.x, vec.y);
+    }
 }

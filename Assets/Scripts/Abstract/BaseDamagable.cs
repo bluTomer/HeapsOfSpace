@@ -31,14 +31,14 @@ public abstract class BaseDamagable : BaseBehaviour
         _hitpoints -= damage;
         if (_hitpoints <= 0)
         {
-            Die();
+            Explode();
             return;
         }
 
         DamageEffect();
     }
 
-    protected abstract void Die();
+    protected abstract void Explode();
 
     public void SetInvincible(float time)
     {

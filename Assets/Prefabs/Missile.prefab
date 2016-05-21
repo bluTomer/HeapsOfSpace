@@ -10,7 +10,7 @@ GameObject:
   - 4: {fileID: 452474}
   - 114: {fileID: 11490244}
   - 50: {fileID: 5007786}
-  m_Layer: 14
+  m_Layer: 15
   m_Name: Missile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25,7 +25,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 427648}
-  m_Layer: 14
+  m_Layer: 15
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,7 +41,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 434604}
   - 61: {fileID: 6173214}
-  m_Layer: 14
+  m_Layer: 15
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -58,7 +58,7 @@ GameObject:
   - 4: {fileID: 469624}
   - 33: {fileID: 3383326}
   - 23: {fileID: 2371296}
-  m_Layer: 14
+  m_Layer: 15
   m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -73,7 +73,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 445206}
-  m_Layer: 14
+  m_Layer: 15
   m_Name: Effects
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -219,16 +219,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efa9f90b9090640ce938f6dee6aa403f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  invincible: 0
-  hitpoints: 0.1
-  selfCollisionDamage: 1
-  impactDamage: 5
+  _invincible: 0
+  _hitpoints: 0
+  _maxHP: 0
   _target: {fileID: 0}
+  _effectPrefab: {fileID: 11418350, guid: 29adee7c5412047819e851ad39271e78, type: 2}
   _launchOnStart: 0
   _speed: 10
   _turn: 12
   _defaultMissileTimeout: 6
   _seeking: 1
+  _explosionRadius: 2
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

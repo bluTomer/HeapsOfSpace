@@ -37,7 +37,7 @@ public class Asteroid : BaseWarpable, IPoolable
         MasterPooler.InitPool<AsteroidDeathEffect>(_deathEffect);
     }
 
-    protected override void Die()
+    protected override void Explode()
     {
         var deathEffect = MasterPooler.Get<AsteroidDeathEffect>(transform.position, transform.rotation);
         deathEffect.transform.localScale = transform.localScale;

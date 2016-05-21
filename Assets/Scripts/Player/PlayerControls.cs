@@ -6,10 +6,12 @@ public class PlayerControls : BaseBehaviour
 {
     [SerializeField] private LaserGun _laserGun;
     [SerializeField] private MissileLauncher _missileLauncher;
-    [SerializeField] private LayerMask _laserTargets;
     [SerializeField] private float _thrustSpeed;
-    [SerializeField] private float _driftSpeed;
     [SerializeField] private float _turnSpeed;
+    [SerializeField] private float _blinkDistance;
+    [SerializeField] private float _blinkCooldown;
+
+    private float _lastBlinkTime;
 
     private SpringJoint2D _currentSpring;
 
@@ -33,6 +35,17 @@ public class PlayerControls : BaseBehaviour
     public void FireBeam()
     {
         _laserGun.Fire();
+    }
+
+    public void Blink(Vector2 direction)
+    {
+        if (Time.time < _lastBlinkTime + _blinkCooldown)
+        {
+            return;
+        }
+
+        transform.Translate(direction.normalized * _blinkDistance, Space.World);
+        _lastBlinkTime = Time.time;
     }
 
     public void FireCannon()

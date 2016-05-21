@@ -1,9 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
+using PigiToolkit.Pooling;
 
 public class MissileLauncher : BaseGun
 {
     [SerializeField] private Missile _missilePrefab;
+
+    protected override void OnStart()
+    {
+        MasterPooler.InitPool<Missile>(_missilePrefab);
+    }
 
     public override BaseDamagable GetTarget()
     {
@@ -37,9 +43,7 @@ public class MissileLauncher : BaseGun
 
     protected override void FireOnTarget(BaseDamagable target)
     {
-        var missile = Instantiate<Missile>(_missilePrefab);
-        missile.transform.position = transform.position;
-        missile.transform.rotation = transform.rotation;
+        var missile = MasterPooler.Get<Missile>(transform.position, transform.rotation);
 
         if (target == null)
         {

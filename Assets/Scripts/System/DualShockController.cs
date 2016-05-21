@@ -35,6 +35,22 @@ public class DualShockController : BaseBehaviour
 
     #endregion
 
+    public Vector2 LeftStick
+    {
+        get
+        {
+            return new Vector2(Input.GetAxis(DS4_Lx), Input.GetAxis(DS4_Ly));
+        }
+    }
+
+    public Vector2 RightStick
+    {
+        get
+        {
+            return new Vector2(Input.GetAxis(DS4_Rx), Input.GetAxis(DS4_Ry));
+        }
+    }
+
     protected override void OnUpdate()
     {
         ProcessMoveDirection();
@@ -48,23 +64,35 @@ public class DualShockController : BaseBehaviour
         {
             _playerShip.FireMissiles();
         }
+
+        if (Pressed(DS4_X))
+        {
+            _playerShip.Blink(LeftStick.sqrMagnitude > 0 ? LeftStick : transform.up.ToVec2());
+        }
+    }
+
+    private void Blink()
+    {
+        if (true)
+        {
+            
+        }
     }
 
     private void ProcessMoveDirection()
     {
-        var direction = new Vector2(Input.GetAxis(DS4_Lx), Input.GetAxis(DS4_Ly));
-        if (direction.sqrMagnitude > 0)
+        if (LeftStick.sqrMagnitude > 0)
         {
-            _playerShip.Move(direction);
+            _playerShip.Move(LeftStick);
         }
     }
 
     private void ProcessLookDirection()
     {
-        var direction = new Vector2(Input.GetAxis(DS4_Rx), Input.GetAxis(DS4_Ry));
-        if (direction.sqrMagnitude > 0)
+        
+        if (RightStick.sqrMagnitude > 0)
         {
-            _playerShip.Look(direction);
+            _playerShip.Look(RightStick);
         }
     }
 

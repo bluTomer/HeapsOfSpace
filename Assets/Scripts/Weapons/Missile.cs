@@ -6,11 +6,13 @@ using PigiToolkit.Pooling;
 public class Missile : BaseWarpable, IPoolable
 {
     [SerializeField] private BaseDamagable _target;
+    [SerializeField] private MissileExplodeEffect _effectPrefab;
     [SerializeField] private bool _launchOnStart;
     [SerializeField] private float _speed;
     [SerializeField] private float _turn;
     [SerializeField] private float _defaultMissileTimeout = 6.0f;
     [SerializeField] private bool _seeking;
+    [SerializeField] private float _explosionRadius;
 
     private Rigidbody2D _rigidbody;
 
@@ -39,6 +41,7 @@ public class Missile : BaseWarpable, IPoolable
 
     protected override void OnStart()
     {
+        MasterPooler.InitPool<MissileExplodeEffect>(_effectPrefab);
         if (_launchOnStart)
         {
             LaunchMissile(_defaultMissileTimeout);
@@ -54,10 +57,10 @@ public class Missile : BaseWarpable, IPoolable
 
         if (Time.time > _detonationTime)
         {
-            Die();
+            Explode();
             return;
         }
-
+       
         _rigidbody.AddForce(transform.up * _speed);
 
         // If target was destroyed or missing, go faulty
@@ -74,7 +77,6 @@ public class Missile : BaseWarpable, IPoolable
             }
         }
 
-
         if (_seeking)
         {
             var targetDirection = _target.transform.position - transform.position;
@@ -88,27 +90,50 @@ public class Missile : BaseWarpable, IPoolable
         _rigidbody.AddForce(transform.up * _speed * 30);
     }
 
-    protected override void Die()
+    protected override void Explode()
     {
-        Debug.Log("Missile Destroyed");
         _isActive = false;
-        Destroy(gameObject);
+
+        var targets = Physics2D.CircleCastAll(transform.position, _explosionRadius, transform.up);
+
+        foreach (var hit in targets)
+        {
+            var damagable = hit.transform.GetComponent<BaseDamagable>();
+            if (damagable != null)
+            {
+                damagable.TakeDamage(_owner.GunDamage);    
+            }
+        }
+
+        var effect = MasterPooler.Get<MissileExplodeEffect>(transform.position, transform.rotation);
+        effect.OnEffectEnd += OnEffectEnd;
+        effect.Play();
+        gameObject.SetActive(false);
     }
 
     protected void OnCollisionEnter2D(Collision2D collision)
     {
+        Debug.Log("Missile collided with " + collision.collider.gameObject.name);
+        Explode();
+    }
+
+    private void OnEffectEnd(MissileExplodeEffect effect)
+    {
+        effect.OnEffectEnd -= OnEffectEnd;
+        MasterPooler.Return<MissileExplodeEffect>(effect);
+        MasterPooler.Return<Missile>(this);
     }
 
     #region IPoolable implementation
 
     public void Init()
     {
-        throw new System.NotImplementedException();
+//        throw new System.NotImplementedException();
     }
 
     public void Reset()
     {
-        throw new System.NotImplementedException();
+//        throw new System.NotImplementedException();
     }
 
     #endregion

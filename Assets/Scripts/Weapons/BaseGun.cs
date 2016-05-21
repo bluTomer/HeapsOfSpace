@@ -12,6 +12,8 @@ public class BaseGun : PigiBehaviour
     [SerializeField] protected bool oneShotOneAction = false;
     [SerializeField] protected LayerMask possibleTargets;
 
+    public int GunDamage { get { return gunDamage; } }
+
     protected bool isFiring;
     protected float nextShotTime;
 

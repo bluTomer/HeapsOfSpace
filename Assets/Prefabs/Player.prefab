@@ -159,6 +159,7 @@ GameObject:
   - 50: {fileID: 5022692}
   - 114: {fileID: 11464206}
   - 114: {fileID: 11456000}
+  - 114: {fileID: 11405828}
   m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
@@ -751,14 +752,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gunDamage: 2
   gunRange: 10
-  shotDelay: 2
+  shotDelay: 0.4
   firePrewarm: 0
   releaseCooldown: 0.1
-  oneShotOneAction: 1
+  oneShotOneAction: 0
   possibleTargets:
     serializedVersion: 2
     m_Bits: 8192
   _missilePrefab: {fileID: 11490244, guid: 3f505c3d130834eec8be68e413ae3b19, type: 2}
+--- !u!114 &11405828
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 137400}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 644c26a2e68fe4ca7bdea71ca1aaa70a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerShip: {fileID: 11464206}
 --- !u!114 &11421754
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -772,7 +785,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gunDamage: 2
   gunRange: 10
-  shotDelay: 0.1
+  shotDelay: 0.3
   firePrewarm: 0
   releaseCooldown: 0.1
   oneShotOneAction: 0
@@ -822,13 +835,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67448b7e66b354d40a3542f710ef58df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _laserGun: {fileID: 11404394}
+  _laserGun: {fileID: 11421754}
+  _missileLauncher: {fileID: 11404394}
   _laserTargets:
     serializedVersion: 2
     m_Bits: 4294963711
   _thrustSpeed: 400
   _driftSpeed: 200
   _turnSpeed: 2
+  _blinkDistance: 3
+  _blinkCooldown: 3
 --- !u!120 &12011494
 LineRenderer:
   m_ObjectHideFlags: 1
