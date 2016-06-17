@@ -13,6 +13,8 @@ public class KeyboardController : BaseBehaviour
     public const string ACTION_C = "Keyboard-ActionC";
     public const string ACTION_D = "Keyboard-ActionD";
 
+    public Vector2 Direction { get { return new Vector2(Input.GetAxis(MOVE_X), Input.GetAxis(MOVE_Y)); } }
+
     protected override void OnUpdate()
     {
         ProcessMoveDirection();
@@ -22,8 +24,7 @@ public class KeyboardController : BaseBehaviour
 
     private void ProcessMoveDirection()
     {
-        var direction = new Vector2(Input.GetAxis(MOVE_X), Input.GetAxis(MOVE_Y));
-        _playerShip.Move(direction);
+        _playerShip.Move(Direction);
     }
 
     private void ProcessLookDirection()
@@ -41,9 +42,17 @@ public class KeyboardController : BaseBehaviour
         {
             _playerShip.FireBeam();
         }
+        else if (Input.GetButton(ACTION_D))
+        {
+            _playerShip.Blink(Direction.sqrMagnitude > 0 ? Direction : transform.up.ToVec2());
+        }
         else if (Input.GetButton((ACTION_C)))
         {
             _playerShip.FireMissiles();
+        }
+        else if (Input.GetKey(KeyCode.E))
+        {
+            _playerShip.FireBomb();
         }
     }
 }

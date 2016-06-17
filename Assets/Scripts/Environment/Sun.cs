@@ -8,6 +8,6 @@ public class Sun : BaseBehaviour
 
     protected override void OnStart()
     {
-        transform.position = ScreenHelper.GetEdgePosition(ScreenHelper.EdgeType.BottomLeft);
+//        transform.position = ScreenHelper.GetEdgePosition(ScreenHelper.EdgeType.BottomLeft);
     }
 }

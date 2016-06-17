@@ -6,6 +6,7 @@ public class PlayerControls : BaseBehaviour
 {
     [SerializeField] private LaserGun _laserGun;
     [SerializeField] private MissileLauncher _missileLauncher;
+    [SerializeField] private BombLauncher _bombLauncher;
     [SerializeField] private float _thrustSpeed;
     [SerializeField] private float _turnSpeed;
     [SerializeField] private float _blinkDistance;
@@ -50,7 +51,7 @@ public class PlayerControls : BaseBehaviour
 
     public void FireCannon()
     {
-        //
+        
     }
 
     public void FireMissiles()
@@ -60,7 +61,7 @@ public class PlayerControls : BaseBehaviour
 
     public void FireBomb()
     {
-        Debug.Log("FireBomb");
+        _bombLauncher.Fire();
     }
 
     protected void OnTriggerEnter2D(Collider2D other)

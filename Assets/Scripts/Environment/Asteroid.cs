@@ -17,14 +17,14 @@ public class Asteroid : BaseWarpable, IPoolable
     private AsteroidDeathEffect _deathEffect;
 
     private Rigidbody2D _rigidBody;
-    private Renderer _renderer;
+    private Renderer[] _renderers;
 
     private Color _healthBarColor;
 
     protected override void AssignComponents()
     {
         _rigidBody = GetComponent<Rigidbody2D>();
-        _renderer = GetComponentInChildren<Renderer>();
+        _renderers = GetComponentsInChildren<Renderer>();
     }
 
     protected override void OnAwake()
@@ -67,11 +67,17 @@ public class Asteroid : BaseWarpable, IPoolable
         _healthBar.fillAmount = (float)_hitpoints / (float)_maxHP;
         _healthBar.color = _healthBarColor;
 
-        _renderer.material.color = Color.red;
+        foreach (var renderer in _renderers)
+        {
+            renderer.material.color = Color.red;
+        }
 
         yield return new WaitForSeconds(0.15f);
 
-        _renderer.material.color = Color.white;
+        foreach (var renderer in _renderers)
+        {
+            renderer.material.color = Color.white;
+        }
 
         yield return new WaitForSeconds(1.5f);
 
@@ -90,7 +96,10 @@ public class Asteroid : BaseWarpable, IPoolable
     {
         StopAllCoroutines();
         _rigidBody.velocity = Vector2.zero;
-        _renderer.material.color = Color.white;
+        foreach (var renderer in _renderers)
+        {
+            renderer.material.color = Color.white;
+        }
     }
 
     #endregion

@@ -6,25 +6,43 @@ using PigiToolkit.Pooling;
 public class AsteroidSpawner : BaseBehaviour
 {
     public Asteroid AsteroidPrefab;
+    public bool IsSpawning;
+    public float SpawnInterval;
+    public int MaxAsteroids;
+    public Vector3[] SpawnPoints;
     public float[] Size;
     public int[] Health;
     public float[] Mass;
 
-    private Asteroid aster;
+    private float _lastSpawnTime;
 
     protected override void OnStart()
     {
         MasterPooler.InitPool<Asteroid>(AsteroidPrefab);
     }
 
-    public void Test()
+    protected override void OnUpdate()
     {
-        SpawnAsteroid(2, Vector3.one, Vector2.left);
+        if (!IsSpawning)
+        {
+            return;
+        }
+
+        if (Time.time > _lastSpawnTime + SpawnInterval && MasterPooler.ActiveObjectCount<Asteroid>() < MaxAsteroids)
+        {
+            var level = Random.Range(1, 3);
+            var position = SpawnPoints[Random.Range(0, SpawnPoints.Length)];
+            var fling = (Random.insideUnitCircle + (Vector2.one * 1.5f)) * Mass[level];
+
+            SpawnAsteroid(level, position, fling);
+
+            _lastSpawnTime = Time.time;
+        }
     }
 
-    public void Testy()
+    public void SetSpawning(bool enabled)
     {
-        aster.TakeDamage(20);
+        IsSpawning = enabled;
     }
 
     public Asteroid SpawnAsteroid(int level, Vector3 position, Vector2 fling)
@@ -37,8 +55,6 @@ public class AsteroidSpawner : BaseBehaviour
         asteroid.OnDeath += OnAsteroidDeath;
         asteroidRB.AddForce(fling, ForceMode2D.Impulse);
         asteroidRB.mass = Mass[level];
-
-        aster = asteroid;
 
         return asteroid;
     }
