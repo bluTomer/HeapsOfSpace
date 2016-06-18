@@ -63,6 +63,8 @@ public class AsteroidSpawner : BaseBehaviour
     {
         asteroid.OnDeath -= OnAsteroidDeath;
 
+        Shake(asteroid.Level);
+
         if (asteroid.Level > 0)
         {
             var asteroidPos = new Vector2(asteroid.transform.position.x, asteroid.transform.position.y);
@@ -83,5 +85,23 @@ public class AsteroidSpawner : BaseBehaviour
         asteroid.gameObject.SetActive(false);
 
         MasterPooler.Return<Asteroid>(asteroid);
+    }
+
+    private void Shake(int level)
+    {
+        switch (level)
+        {
+            case 2:
+                Context.Instance.CameraShake.Shake(0.3f, 6, 10);
+                break;
+            case 1:
+                Context.Instance.CameraShake.Shake(0.2f, 4, 7);
+                break;
+            case 0:
+                Context.Instance.CameraShake.Shake(0.1f, 4, 5);
+                break;
+            default:
+                break;
+        }
     }
 }

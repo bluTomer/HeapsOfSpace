@@ -4,8 +4,11 @@ using PigiToolkit.Mono;
 
 public class Context : Singleton<Context>
 {
+    [SerializeField] private CameraControl _cameraShake;
     [SerializeField] private Vector2 _colliderPadding;
     [SerializeField] private LayerMask _colliderLayer;
+
+    public CameraControl CameraShake { get { return _cameraShake; } }
 
     protected override void OnStart()
     {
