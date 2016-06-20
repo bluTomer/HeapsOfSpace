@@ -5,8 +5,12 @@ using PigiToolkit.Mono;
 public class Context : Singleton<Context>
 {
     [SerializeField] private CameraControl _cameraShake;
+    [SerializeField] private PlayerControls _playerPrefab;
     [SerializeField] private Vector2 _colliderPadding;
     [SerializeField] private LayerMask _colliderLayer;
+    [SerializeField] private Material[] _playerMaterials;
+
+    private PlayerControls[] _players;
 
     public CameraControl CameraShake { get { return _cameraShake; } }
 
@@ -20,6 +24,21 @@ public class Context : Singleton<Context>
             new Vector3(1, ScreenHelper.ScreenBounds.size.y * _colliderPadding.x, 1), EdgeWrapper.EdgeType.Horizontal);
         CreateCollider("Left", ScreenHelper.GetEdgePosition(Vector3.left * _colliderPadding.x), 
             new Vector3(1, ScreenHelper.ScreenBounds.size.y * _colliderPadding.x, 1), EdgeWrapper.EdgeType.Horizontal);
+
+        CreatePlayers(1);
+    }
+
+    private void CreatePlayers(int count)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            var player = Instantiate(_playerPrefab);
+            player.transform.position = Vector3.zero;
+            player.Setup(i + 1, _playerMaterials[i]);
+            var dsController = player.gameObject.AddComponent<KeyboardController>();
+            dsController._playerShip = player;
+            //dsController.PlayerID = i + 1;
+        }
     }
 
     public GameObject CreateCollider(string name, Vector3 position, Vector3 size, EdgeWrapper.EdgeType edge)

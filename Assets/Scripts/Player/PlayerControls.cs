@@ -4,6 +4,8 @@ using PigiToolkit.Mono;
 
 public class PlayerControls : BaseBehaviour
 {
+    public int PlayerID;
+
     [SerializeField] private LaserGun _laserGun;
     [SerializeField] private MissileLauncher _missileLauncher;
     [SerializeField] private BombLauncher[] _bombLaunchers;
@@ -17,6 +19,22 @@ public class PlayerControls : BaseBehaviour
     private SpringJoint2D _currentSpring;
 
     private Rigidbody2D _rb2D;
+
+    public void Setup(int ID, Material material)
+    {
+        PlayerID = ID;
+        var renderers = GetComponentsInChildren<Renderer>();
+
+        foreach (var renderer in renderers)
+        {
+            if (renderer is LineRenderer)
+            {
+                continue;
+            }
+
+            renderer.material = material;
+        }
+    }
 
     protected override void AssignComponents()
     {

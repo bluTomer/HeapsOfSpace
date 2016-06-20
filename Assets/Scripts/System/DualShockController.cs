@@ -4,42 +4,53 @@ using PigiToolkit.Mono;
 
 public class DualShockController : BaseBehaviour
 {
-    [SerializeField] private PlayerControls _playerShip;
+    public int PlayerID;
 
-    #region Axes
+    private PlayerControls _playerShip;
 
-    public const string DS4_Lx = "DS4-Lx";
-    public const string DS4_Ly = "DS4-Ly";
+    private const string KeyFormat = "GP{0}-DS4-{1}";
 
-    public const string DS4_Rx = "DS4-Rx";
-    public const string DS4_Ry = "DS4-Ry";
+    public enum AxisType
+    {
+        Lx,
+        Ly,
+        Rx,
+        Ry,
+    }
 
-    #endregion
+    public enum ButtonType
+    {
+        X,
+        Square,
+        Circle,
+        Triangle,
+        L1,
+        L2,
+        L3,
+        R1,
+        R2,
+        R3,
+        Share,
+        Options,
+        PS,
+        Pad,
+    }
 
-    #region Buttons
+    private string GetKey(ButtonType button)
+    {
+        return string.Format(KeyFormat, PlayerID, button.ToString());
+    }
 
-    public const string DS4_X = "DS4-X";
-    public const string DS4_SQR = "DS4-Square";
-    public const string DS4_CRCL = "DS4-Circle";
-    public const string DS4_TRIG = "DS4-Triangle";
-    public const string DS4_SHARE = "DS4-Share";
-    public const string DS4_OPTN = "DS4-Options";
-    public const string DS4_L1 = "DS4-L1";
-    public const string DS4_L2 = "DS4-L2";
-    public const string DS4_L3 = "DS4-L3";
-    public const string DS4_R1 = "DS4-R1";
-    public const string DS4_R2 = "DS4-R2";
-    public const string DS4_R3 = "DS4-R3";
-    public const string DS4_PS = "DS4-PS";
-    public const string DS4_PAD = "DS4-Pad";
-
-    #endregion
+    private string GetKey(AxisType axis)
+    {
+        return string.Format(KeyFormat, PlayerID, axis.ToString());
+    }
 
     public Vector2 LeftStick
     {
         get
         {
-            return new Vector2(Input.GetAxis(DS4_Lx), Input.GetAxis(DS4_Ly));
+            return new Vector2(Input.GetAxis(GetKey(AxisType.Lx)), Input.GetAxis(GetKey(AxisType.Ly)));
         }
     }
 
@@ -47,8 +58,13 @@ public class DualShockController : BaseBehaviour
     {
         get
         {
-            return new Vector2(Input.GetAxis(DS4_Rx), Input.GetAxis(DS4_Ry));
+            return new Vector2(Input.GetAxis(GetKey(AxisType.Rx)), Input.GetAxis(GetKey(AxisType.Ry)));
         }
+    }
+
+    protected override void AssignComponents()
+    {
+        _playerShip = GetComponent<PlayerControls>();
     }
 
     protected override void OnUpdate()
@@ -56,16 +72,20 @@ public class DualShockController : BaseBehaviour
         ProcessMoveDirection();
         ProcessLookDirection();
 
-        if (Pressed(DS4_R2))
+        if (Pressed(GetKey(ButtonType.R2)))
         {
             _playerShip.FireBeam();
         }
-        else if (Pressed(DS4_R1))
+        else if (Pressed(GetKey(ButtonType.R1)))
         {
             _playerShip.FireMissiles();
         }
+        else if (Pressed((GetKey(ButtonType.L1))))
+        {
+            _playerShip.FireBomb();
+        }
 
-        if (Pressed(DS4_X))
+        if (Pressed(GetKey(ButtonType.X)))
         {
             _playerShip.Blink(LeftStick.sqrMagnitude > 0 ? LeftStick : transform.up.ToVec2());
         }

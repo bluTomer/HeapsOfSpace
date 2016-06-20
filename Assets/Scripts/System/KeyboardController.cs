@@ -4,7 +4,7 @@ using PigiToolkit.Mono;
 
 public class KeyboardController : BaseBehaviour
 {
-    [SerializeField] private PlayerControls _playerShip;
+    public PlayerControls _playerShip;
 
     public const string MOVE_Y = "Keyboard-Y";
     public const string MOVE_X = "Keyboard-X";
