@@ -15,6 +15,13 @@ public class KeyboardController : BaseBehaviour
 
     public Vector2 Direction { get { return new Vector2(Input.GetAxis(MOVE_X), Input.GetAxis(MOVE_Y)); } }
 
+    public float LastInputTime { get; private set; }
+
+    protected override void OnStart()
+    {
+        LastInputTime = Time.time;
+    }
+
     protected override void OnUpdate()
     {
         ProcessMoveDirection();
@@ -40,6 +47,7 @@ public class KeyboardController : BaseBehaviour
     {
         if (Input.GetButton(ACTION_A))
         {
+            LastInputTime = Time.time;
             _playerShip.FireBeam();
         }
         else if (Input.GetButton(ACTION_D))
@@ -52,6 +60,7 @@ public class KeyboardController : BaseBehaviour
         }
         else if (Input.GetKey(KeyCode.E))
         {
+            LastInputTime = Time.time;
             _playerShip.FireBomb();
         }
     }

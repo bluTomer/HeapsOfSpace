@@ -8,7 +8,9 @@ public class DualShockController : BaseBehaviour
 
     private PlayerControls _playerShip;
 
-    private const string KeyFormat = "GP{0}-DS4-{1}";
+    public const string KEY_FORMAT = "GP{0}-{1}";
+
+    public float LastInputTime { get; private set; }
 
     public enum AxisType
     {
@@ -16,34 +18,35 @@ public class DualShockController : BaseBehaviour
         Ly,
         Rx,
         Ry,
+        R2L2,
     }
 
     public enum ButtonType
     {
+        B,
+        A,
         X,
-        Square,
-        Circle,
-        Triangle,
+        Y,
         L1,
-        L2,
         L3,
         R1,
-        R2,
         R3,
+        START,
+        BACK,
         Share,
         Options,
         PS,
         Pad,
     }
 
-    private string GetKey(ButtonType button)
+    public string GetKey(ButtonType button)
     {
-        return string.Format(KeyFormat, PlayerID, button.ToString());
+        return string.Format(KEY_FORMAT, PlayerID, button.ToString());
     }
 
-    private string GetKey(AxisType axis)
+    public string GetKey(AxisType axis)
     {
-        return string.Format(KeyFormat, PlayerID, axis.ToString());
+        return string.Format(KEY_FORMAT, PlayerID, axis.ToString());
     }
 
     public Vector2 LeftStick
@@ -67,35 +70,35 @@ public class DualShockController : BaseBehaviour
         _playerShip = GetComponent<PlayerControls>();
     }
 
+    protected override void OnStart()
+    {
+        LastInputTime = Time.time;
+    }
+
     protected override void OnUpdate()
     {
         ProcessMoveDirection();
         ProcessLookDirection();
 
-        if (Pressed(GetKey(ButtonType.R2)))
+        if (Pressed(GetKey(ButtonType.R1)))
         {
+            LastInputTime = Time.time;
             _playerShip.FireBeam();
         }
-        else if (Pressed(GetKey(ButtonType.R1)))
+        else if (Pressed(GetKey(ButtonType.L1)))
         {
+            LastInputTime = Time.time;
             _playerShip.FireMissiles();
         }
-        else if (Pressed((GetKey(ButtonType.L1))))
+        else if (Mathf.Abs(Input.GetAxisRaw(GetKey(AxisType.R2L2))) > 0.5f)
         {
+            LastInputTime = Time.time;
             _playerShip.FireBomb();
         }
 
-        if (Pressed(GetKey(ButtonType.X)))
+        if (Pressed(GetKey(ButtonType.Y)))
         {
             _playerShip.Blink(LeftStick.sqrMagnitude > 0 ? LeftStick : transform.up.ToVec2());
-        }
-    }
-
-    private void Blink()
-    {
-        if (true)
-        {
-            
         }
     }
 
@@ -116,7 +119,7 @@ public class DualShockController : BaseBehaviour
         }
     }
 
-    private bool Pressed(string button)
+    public bool Pressed(string button)
     {
         return Input.GetButton(button);
     }

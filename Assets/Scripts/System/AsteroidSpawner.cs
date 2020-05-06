@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using PigiToolkit.Mono;
 using PigiToolkit.Pooling;
 
 public class AsteroidSpawner : BaseBehaviour
 {
+    public Text AsteroidsText;
     public Asteroid AsteroidPrefab;
     public bool IsSpawning;
     public float SpawnInterval;
@@ -14,11 +16,28 @@ public class AsteroidSpawner : BaseBehaviour
     public int[] Health;
     public float[] Mass;
 
+    private int AsteroidCount
+    {
+        get
+        {
+            return PlayerPrefs.GetInt("Asteroids", 0);
+        }
+
+        set
+        {
+            PlayerPrefs.SetInt("Asteroids", value);
+        }
+    }
+
+    private float _originalSpawnInterval;
+
     private float _lastSpawnTime;
 
     protected override void OnStart()
     {
         MasterPooler.InitPool<Asteroid>(AsteroidPrefab);
+        _originalSpawnInterval = SpawnInterval;
+        SetSpawning(true);
     }
 
     protected override void OnUpdate()
@@ -26,6 +45,15 @@ public class AsteroidSpawner : BaseBehaviour
         if (!IsSpawning)
         {
             return;
+        }
+
+        if (Context.Instance.PlayerCount > 2)
+        {
+            SpawnInterval = _originalSpawnInterval * 0.5f;
+        }
+        else
+        {
+            SpawnInterval = _originalSpawnInterval;
         }
 
         if (Time.time > _lastSpawnTime + SpawnInterval && MasterPooler.ActiveObjectCount<Asteroid>() < MaxAsteroids)
@@ -42,11 +70,17 @@ public class AsteroidSpawner : BaseBehaviour
 
     public void SetSpawning(bool enabled)
     {
+        AsteroidsText.text = string.Format("{0}.{1}\nAsteroids Destroyed", AsteroidCount++, (AsteroidCount % 100) * 3);
         IsSpawning = enabled;
     }
 
     public Asteroid SpawnAsteroid(int level, Vector3 position, Vector2 fling)
     {
+        if (Context.Instance.PlayerCount == 0)
+        {
+            return null;
+        }
+
         var asteroid = MasterPooler.Get<Asteroid>(position, Quaternion.identity);
         var asteroidRB = asteroid.GetComponent<Rigidbody2D>();
         asteroid.transform.localScale = Vector3.one * Size[level];
@@ -80,6 +114,10 @@ public class AsteroidSpawner : BaseBehaviour
             var explosionDir = (asteroidPos + pos) - asteroidPos;
             SpawnAsteroid(asteroid.Level - 1, asteroidPos + pos, explosionDir * Mass[asteroid.Level - 1] * 2.0f);
             SpawnAsteroid(asteroid.Level - 1, asteroidPos - pos, explosionDir * Mass[asteroid.Level - 1] * -2.0f);
+        }
+        else
+        {
+            AsteroidsText.text = string.Format("{0}.{1}\nAsteroids Destroyed", AsteroidCount++, (AsteroidCount % 100) * 3);
         }
 
         asteroid.gameObject.SetActive(false);

@@ -259,7 +259,7 @@ MonoBehaviour:
   _turn: 12
   _defaultMissileTimeout: 6
   _seeking: 1
-  _explosionRadius: 2
+  _explosionRadius: 1
 --- !u!198 &19833592
 ParticleSystem:
   m_ObjectHideFlags: 1
